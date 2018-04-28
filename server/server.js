@@ -1,16 +1,21 @@
 const path = require('path');
+const http = require('http');
 const express = require('express');
+const socketIO = require('socket.io');
 
-//Used to get path to public directory 
-const publicPath = path.join(__dirname, '../public');
-//Configure for heroku
+const publicPath = path.join(__dirname + '../public');
 const port = process.env.PORT || 3000;
-//To configure express applicaiton
 var app = express();
+var server = http.createServer(app);
+var io = socketIO(server);
 
 app.use(express.static(publicPath));
 
-app.listen(3000, ()=>{
-	console.log('Server is up');
+//Allows to register an event listener
+io.on('connection', (socket) => {
+    console.log('User connected');
 });
 
+server.listen(port, ()=>{
+	console.log('Server is up');
+});
